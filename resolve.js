@@ -7,6 +7,10 @@ const yaml = require('yaml');
 const config = require('./lib/config.js');
 const loader = require('./lib/loader.js');
 const fromJsonSchema = require('json-schema-to-openapi-schema');
+const yamlTypes = require('yaml/types');
+
+const DEFAULT_LINE_WIDTH = 80;
+const DEFAULT_TYPE = 'PLAIN';
 
 const command = async (file, cmd) => {
     config.init(cmd);
@@ -14,11 +18,15 @@ const command = async (file, cmd) => {
     const output = config.get('resolve:output');
     const verbose = config.get('quiet') ? 0 : config.get('verbose', 1);
     const internalRefs = config.get('resolve:internalRefs');
+    const lineWidth = config.get('resolve:width', DEFAULT_LINE_WIDTH);
+    const defaultType = config.get('resolve:type', DEFAULT_TYPE);
 
     const spec = await loader.readOrError(
         file,
         buildLoaderOptions(jsonSchema, verbose, internalRefs)
     );
+    yamlTypes.strOptions.fold.lineWidth = lineWidth;
+    yamlTypes.strOptions.defaultType = defaultType;
     const content = yaml.stringify(spec);
 
     return new Promise((resolve, reject) => {

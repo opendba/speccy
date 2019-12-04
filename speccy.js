@@ -51,6 +51,8 @@ program
     .option('-j, --json-schema', 'treat $ref like JSON Schema and convert to OpenAPI Schema Objects (default: false)')
     .option('-i, --internal-refs', 'resolve internal references (default: false)')
     .option('-v, --verbose', 'increase verbosity', increaseVerbosity, 1)
+    .option( '-w, --width [value]', 'line width (default: 80)')
+    .option( '-t, --type [value]', 'character type (default: PLAIN)')
     .action((specFile, cmd) => {
         resolve.command(specFile, cmd)
             .then(() => { process.exit(0) })
